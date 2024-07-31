@@ -1,41 +1,28 @@
-import queue
-import random
 import time
-
-request_queue = queue.Queue()
-request_id_counter = 1
+from coins_funcs import find_coins_greedy, find_min_coins
 
 
-def generate_request():
-    global request_id_counter
+def compare_algorithms(amount, coins):
+    # Greedy algorithm
+    start_time = time.time()
+    greedy_result = find_coins_greedy(amount, coins)
+    greedy_time = time.time() - start_time
 
-    request = f"Request {request_id_counter}"
-    request_id_counter += 1
+    # Dynamic Programming algorithm
+    start_time = time.time()
+    dp_result = find_min_coins(amount, coins)
+    dp_time = time.time() - start_time
 
-    request_queue.put(request)
-    print(f"Generated and added to queue: {request}")
-
-
-def process_request():
-    if not request_queue.empty():
-        request = request_queue.get()
-
-        print(f"Processing {request}")
-        time.sleep(1)
-    else:
-        print("No requests available to process.")
+    print(f"Greedy approach: {greedy_result}, Time: {greedy_time:.6f} seconds")
+    print(f"Dynamic Programming approach: {dp_result}, Time: {dp_time:.6f} seconds")
 
 
-def main():
-    try:
-        while True:
-            generate_request()
-            time.sleep(random.uniform(0.5, 2))
+coins = [50, 25, 10, 5, 2, 1]
 
-            process_request()
-    except KeyboardInterrupt:
-        print("\nExiting the program...")
+# Test with small amount
+amount = 113
+compare_algorithms(amount, coins)
 
-
-if __name__ == "__main__":
-    main()
+# Test with large amount
+large_amount = 100000
+compare_algorithms(large_amount, coins)
